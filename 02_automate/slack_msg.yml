@@ -1,0 +1,11 @@
+- hosts: all
+  gather_facts: no
+  become: no
+
+  tasks:
+    - name: Sending a slack message
+      slack:
+        msg: "Apache is alive! Woo!"
+        color: good
+        token: "{{ slack_token }}"
+      when: slack_token is defined
