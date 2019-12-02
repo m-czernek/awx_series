@@ -1,0 +1,21 @@
+- hosts: all
+  gather_facts: yes
+  become: yes
+
+  vars:
+    awx_version: "devel"
+    nodejs_version: "6.x"
+    pip_install_packages:
+      - name: docker
+      # Check https://github.com/geerlingguy/ansible-role-docker/blob/master/defaults/main.yml#L14 
+      # for current docker-compose version
+      - name: docker-compose==1.24.1
+
+  roles:
+    - geerlingguy.repo-epel
+    - geerlingguy.git
+    - geerlingguy.ansible
+    - geerlingguy.docker
+    - geerlingguy.pip
+    - geerlingguy.nodejs
+    - geerlingguy.awx
