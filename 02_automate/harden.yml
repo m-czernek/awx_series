@@ -1,0 +1,34 @@
+- hosts: all
+  gather_facts: yes
+  become: yes
+
+  tasks:
+    - name: Hardening system
+      service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Enable HTTP and HTTPS access
+      firewalld:
+        immediate: true
+        permanent: true
+        port: "{{ item }}/tcp"
+        state: enabled
+      loop:
+        - 80
+        - 443
+
+    - name: Hardening Apache httpd
+      lineinfile:
+        path: /etc/httpd/conf.d/vhosts.conf
+        insertafter: '<VirtualHost'
+        line: 'Redirect / https://server.local'
+      notify:
+        - reload_appache
+
+  handlers:
+    - name: reload_appache
+      service:
+        name: httpd
+        state: reloaded
