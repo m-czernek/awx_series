@@ -8,7 +8,7 @@
   tasks:
     - name: Sending a slack message
       slack:
-        msg: "Apache is alive! Woo!"
+        msg: "Apache is alive! Woo! Deployment executed on {{ ansible_date_time.date }}"
         token: "{{ slack_token }}"
         attachments:
           - text: "Yis"
