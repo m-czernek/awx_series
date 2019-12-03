@@ -2,10 +2,20 @@
   gather_facts: no
   become: no
 
+  vars:
+    gif_url: https://media.giphy.com/media/vNITrslTkxf8Y/giphy.gif
+
   tasks:
     - name: Sending a slack message
       slack:
         msg: "Apache is alive! Woo!"
-        color: good
         token: "{{ slack_token }}"
+        attachments:
+          - text: "Yis"
+            fallback: "Success"
+            title: "Success!"
+            title_link: "{{ gif_url }}"
+            image_url: "{{ gif_url }}"
+            thumb_url: "{{ gif_url }}"
+            color: good
       when: slack_token is defined
