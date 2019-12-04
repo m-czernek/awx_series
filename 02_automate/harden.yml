@@ -1,6 +1,9 @@
 - hosts: all
   gather_facts: yes
   become: yes
+  
+  vars:
+    apache_vhost_filepath: "/etc/httpd/conf.d/vhosts.conf"
 
   tasks:
     - name: Hardening system
@@ -19,13 +22,19 @@
         - 80
         - 443
 
+    - name: Check if Apache vhost file exists
+      stat:
+        path: "{{ apache_vhost_filepath }}"
+      register: vhost_filestat
+
     - name: Hardening Apache httpd
       lineinfile:
-        path: /etc/httpd/conf.d/vhosts.conf
+        path: "{{ apache_vhost_filepath }}"
         insertafter: '<VirtualHost'
         line: 'Redirect / https://server.local'
       notify:
         - reload_appache
+      when: vhost_filestat.stat.exists | bool
 
   handlers:
     - name: reload_appache
